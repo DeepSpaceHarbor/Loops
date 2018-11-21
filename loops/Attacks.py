@@ -3,6 +3,8 @@ from enum import Enum, unique
 
 @unique
 class AttackTypes(Enum):
+    NewtonFoolAttack = "NewtonFoolAttack"
+    ADefAttack = "ADefAttack"
     GradientSignAttack = "GradientSignAttack"
     IterativeGradientSignAttack = "IterativeGradientSignAttack"
     GradientAttack = "GradientAttack"
@@ -24,6 +26,7 @@ class AttackTypes(Enum):
     SaltAndPepperNoiseAttack = "SaltAndPepperNoiseAttack"
     BlendedUniformNoiseAttack = "BlendedUniformNoiseAttack"
     PointwiseAttack = "PointwiseAttack"
+    SpatialAttack = "SpatialAttack"
 
     def __str__(self):
         return str(self.value)

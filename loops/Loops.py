@@ -23,14 +23,21 @@ class LoopAttack:
             return np.argmax(self.model.predictions(input))
 
     def attack(self, loop, input, attack, preprocess=None, postprocess=None):
+        print("Starting loop: " + str(loop))
         labelOriginal = self.getLabel(input)
         if preprocess is not None:
+            print("Data preprocessing...")
             input = preprocess(loop, input, labelOriginal)
+        print("Getting label...")
         labelOriginal = self.getLabel(input)
+        print("Done.\nAttack in 3, 2, 1...")
+        print("Attacking with: " + str(attack))
         advExample = strike(self.model, input, labelOriginal, attack)
         labelAdversarial = self.getLabel(advExample)
         if postprocess is not None:
+            print("Data postprocessing...")
             advExample = postprocess(loop, input, labelOriginal, attack, advExample, labelAdversarial)
+        print("Loop " + str(loop) + " is completed.")
         return {
             "loop": loop,
             "input": input,

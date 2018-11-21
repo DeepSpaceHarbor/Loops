@@ -55,6 +55,14 @@ def SaliencyMapAttack(model, image, label):
     attack = foolbox.attacks.SaliencyMapAttack(model)
     return attack(image, label)
 
+def ADefAttack(model, image, label):
+    attack = foolbox.attacks.ADefAttack(model)
+    return attack(image, label)
+
+def NewtonFoolAttack(model, image, label):
+    attack = foolbox.attacks.NewtonFoolAttack(model)
+    return attack(image, label)
+
 
 # Score-based attacks
 def SinglePixelAttack(model, image, label):
@@ -112,6 +120,10 @@ def PointwiseAttack(model, image, label):
     attack = foolbox.attacks.PointwiseAttack(model)
     return attack(image, label)
 
+def SpatialAttack(model, image, label):
+    attack = foolbox.attacks.SpatialAttack(model)
+    return attack(image, label)
+
 
 def strike(model, input, label, attack):
     if attack is AttackTypes.GradientSignAttack:
@@ -156,5 +168,10 @@ def strike(model, input, label, attack):
         return BlendedUniformNoiseAttack(model, input, label)
     if attack is AttackTypes.PointwiseAttack:
         return PointwiseAttack(model, input, label)
-
+    if attack is AttackTypes.ADefAttack:
+        return ADefAttack(model, input, label)
+    if attack is AttackTypes.NewtonFoolAttack:
+        return NewtonFoolAttack(model,input,label)
+    if attack is AttackTypes.SpatialAttack:
+        return SpatialAttack(model,input,label)
     raise ValueError('Invalid attack.', attack)
