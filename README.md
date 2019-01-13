@@ -1,5 +1,5 @@
 
-Loops is a tool for generating lots of adversarial examples, created as part of my bachelor's thesis.
+Loops is a tool for generating lots of untargeted adversarial examples, created as part of my bachelor's thesis.
 
 **This is proof of concept** code.
 
