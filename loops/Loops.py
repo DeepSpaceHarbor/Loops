@@ -16,24 +16,24 @@ class LoopAttack:
         self.loops = loops
         self.model = foolbox.models.KerasModel(model, bounds)
 
-    def getLabel(self, input):
+    def _getLabel(self, input):
         if input is None:
             return input
         else:
             return np.argmax(self.model.predictions(input))
 
-    def attack(self, loop, input, attack, preprocess=None, postprocess=None):
+    def _attack(self, loop, input, attack, preprocess=None, postprocess=None):
         print("Starting loop: " + str(loop))
-        labelOriginal = self.getLabel(input)
+        labelOriginal = self._getLabel(input)
         if preprocess is not None:
             print("Data preprocessing...")
             input = preprocess(loop, input, labelOriginal)
         print("Getting label...")
-        labelOriginal = self.getLabel(input)
+        labelOriginal = self._getLabel(input)
         print("Done.\nAttack in 3, 2, 1...")
         print("Attacking with: " + str(attack))
         advExample = strike(self.model, input, labelOriginal, attack)
-        labelAdversarial = self.getLabel(advExample)
+        labelAdversarial = self._getLabel(advExample)
         if postprocess is not None:
             print("Data postprocessing...")
             advExample = postprocess(loop, input, labelOriginal, attack, advExample, labelAdversarial)
@@ -47,11 +47,11 @@ class LoopAttack:
             "labelAdversarial": labelAdversarial
         }
 
-    def best_of(self, loop, data, compare, attacksList, preprocess=None, postprocess=None):
+    def _best_of(self, loop, data, compare, attacksList, preprocess=None, postprocess=None):
         maxScore = None
         maxAdversarial = None
         for attack in attacksList:
-            adversarial = self.attack(loop, data, attack, preprocess, postprocess)
+            adversarial = self._attack(loop, data, attack, preprocess, postprocess)
             score = compare(adversarial)
             print("Attacked: ", attack,"Result: ",score)
             if maxScore is None:
@@ -65,7 +65,7 @@ class LoopAttack:
     def single(self, data, attack, preprocess=None, postprocess=None):
         adversarialExamples = []
         for loop in range(0, self.loops):
-            advExample = self.attack(loop, data, attack, preprocess, postprocess)
+            advExample = self._attack(loop, data, attack, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -80,7 +80,7 @@ class LoopAttack:
                 oldAttack = []
             while attack in oldAttack:
                 attack = random.choice(list(AttackTypes))
-            advExample = self.attack(loop, data, attack, preprocess, postprocess)
+            advExample = self._attack(loop, data, attack, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -94,7 +94,7 @@ class LoopAttack:
         while loop < self.loops:
             loop += 1
             attack = random.choice(list(AttackTypes))
-            advExample = self.attack(loop, data, attack, preprocess, postprocess)
+            advExample = self._attack(loop, data, attack, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -103,7 +103,7 @@ class LoopAttack:
     def all_best_of(self, data, compare, preprocess=None, postprocess=None):
         adversarialExamples = []
         for loop in range(0, self.loops):
-            advExample = self.best_of(loop, data,compare, AttackTypes, preprocess, postprocess)
+            advExample = self._best_of(loop, data, compare, AttackTypes, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -118,7 +118,7 @@ class LoopAttack:
                 oldAttack = []
             while attack in oldAttack:
                 attack = random.choice(list(attacks))
-            advExample = self.attack(loop, data, attack, preprocess, postprocess)
+            advExample = self._attack(loop, data, attack, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -132,7 +132,7 @@ class LoopAttack:
         while loop < self.loops:
             loop += 1
             attack = random.choice(list(attacks))
-            advExample = self.attack(loop, data, attack, preprocess, postprocess)
+            advExample = self._attack(loop, data, attack, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)
@@ -142,7 +142,7 @@ class LoopAttack:
     def any_of_best_of(self, data, attacks, compare, preprocess=None, postprocess=None):
         adversarialExamples = []
         for loop in range(0, self.loops):
-            advExample = self.best_of(loop, data, compare, attacks, preprocess, postprocess)
+            advExample = self._best_of(loop, data, compare, attacks, preprocess, postprocess)
             if advExample["adversarialExample"] is not None:
                 data = advExample["adversarialExample"]
             adversarialExamples.append(advExample)

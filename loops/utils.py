@@ -45,20 +45,8 @@ def generate_attack_groups_from(groupCount, membersCount, sharedAttacks=True, at
 def generate_attack_groups_without(groupCount, membersCount, sharedAttacks=True, excludedAttacks=[]):
     if sharedAttacks is False and (groupCount * membersCount) > len(AttackTypes) - len(excludedAttacks):
         return []
-    groups = []
-    seenAttacks = []
-    for groupID in range(0, groupCount):
-        tmpGroup = []
-        for memberID in range(0, membersCount):
-            attack = random.choice(list(AttackTypes))
-            while attack in excludedAttacks:
-                attack = random.choice(list(AttackTypes))
-            if sharedAttacks:
-                tmpGroup.append(attack)
-            else:
-                while attack in seenAttacks or attack in excludedAttacks:
-                    attack = random.choice(list(AttackTypes))
-                tmpGroup.append(attack)
-                seenAttacks.append(attack)
-        groups.append(tmpGroup)
-    return groups
+    approvedAttacks = []
+    for attack in AttackTypes:
+        if attack not in excludedAttacks:
+            approvedAttacks.append(attack)
+    return generate_attack_groups_from(groupCount,membersCount,sharedAttacks,approvedAttacks)
