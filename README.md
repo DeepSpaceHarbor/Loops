@@ -8,5 +8,3 @@ Lots of techiniques for adversarial examples are aimed are minimizing distance m
 
 ## Usage
 More info along with code examples can be found in the project [wiki](https://github.com/RandomAdversary/Loops/wiki).
-
-## Contributing
